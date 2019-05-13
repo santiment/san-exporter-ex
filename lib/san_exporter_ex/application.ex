@@ -3,12 +3,12 @@ defmodule SanExporterEx.Application do
 
   use Application
 
-  @default_zookeeper_url "localhost:2181"
-  @default_kafka_url "localhost:9092"
+  @default_kafka_endpoint [localhost: 9092]
+  @default_kafka_producer_name :kafka_producer
   @default_kafka_topic "api_call_data"
-  @default_kafka_flush_timeout "5000"
+  @default_kafka_flush_timeout 20000
+  @default_buffering_max_messages 5000
   @default_kafka_compression_codec "lz4"
-  @default_buffering_max_messages "20000"
   @default_format_header "format=json"
 
   @type options :: [
@@ -29,32 +29,42 @@ defmodule SanExporterEx.Application do
 
     %{
       id: id,
-      start: {__MODULE__, :start_link, [opts]},
+      start: {__MODULE__, :start, [:normal, opts]},
       type: :supervisor
     }
   end
 
-  @spec start_link(options) ::
+  @spec start(atom, options) ::
           {:ok, pid} | {:error, {:already_started, pid} | {:shutdown, term} | term}
-  def start_link(opts) do
+  def start(_type, opts) do
     defaults = [
       name: __MODULE__,
-      zookeeper_url: @default_zookeeper_url,
-      kafka_url: @default_kafka_url,
+      kafka_endpoint: @default_kafka_endpoint,
       kafka_topic: @default_kafka_topic,
       kafka_flush_timeout: @default_kafka_flush_timeout,
       kafka_compression_codec: @default_kafka_compression_codec,
       buffering_max_messages: @default_buffering_max_messages,
-      format_header: @default_format_header
+      format_header: @default_format_header,
+      kafka_producer_name: @default_kafka_producer_name
     ]
 
     opts = Keyword.merge(defaults, opts)
 
-    children = [
-      {Task.Supervisor, [name: Sanbase.TaskSupervisor]}
+    kaffe_opts = [
+      start_producer?: true,
+      endpoints: [opts[:kafka_endpoint]],
+      client_name: opts[:kafka_producer_name]
     ]
 
-    :erlzk.start()
+    # As applications is explicitly set to empty list, we need to manually start
+    # brod, erlzk and kaffe when needed.
+    # A task supervisor is needed to perform the async writes to kafka
+    children = [
+      {Task.Supervisor, [name: SanExporterEx.TaskSupervisor]},
+      %{id: :erlzk, start: {:erlzk_app, :start, [:normal, []]}, type: :supervisor},
+      %{id: :brod, start: {:brod_sup, :start_link, []}, type: :supervisor},
+      %{id: :kafka_producer, start: {Kaffe, :start, [:normal, kaffe_opts]}, type: :supervisor}
+    ]
 
     Supervisor.start_link(
       children,

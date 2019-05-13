@@ -1,6 +1,6 @@
 defmodule SanExporterEx.Zookeeper do
   def connect(host, port, timeout \\ 30_000) do
-    {:ok, pid} = :erlzk.connect([{host, port}], timeout)
+    :erlzk.connect([{host, port}], timeout)
   end
 
   def close(pid) when is_pid(pid) do
