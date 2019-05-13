@@ -3,8 +3,9 @@ defmodule SanExporterEx.Application do
 
   use Application
 
+  # the producern name cannot be different
   @default_kafka_endpoint [localhost: 9092]
-  @default_kafka_producer_name :kafka_producer
+  @default_kafka_producer_name :kaffe_producer_client
   @default_kafka_topic "api_call_data"
   @default_kafka_flush_timeout 20000
   @default_buffering_max_messages 5000
@@ -52,7 +53,7 @@ defmodule SanExporterEx.Application do
 
     kaffe_opts = [
       start_producer?: true,
-      endpoints: [opts[:kafka_endpoint]],
+      endpoints: opts[:kafka_endpoint],
       client_name: opts[:kafka_producer_name]
     ]
 
