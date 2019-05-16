@@ -4,7 +4,7 @@ defmodule SanExporterEx do
 
   SanExporterEx is an Elixir library for pushing data to Santiment pipelines.
 
-  The library has two main goals - comunicate with Zookeeper and comunicate with Kafka.
+  The library has two main goals - communicate with Zookeeper and comunicate with Kafka.
   Zookeeper is used for storing some metadata such as last scraped position. This
   will allow scrapers to store data that will persist restarts and crashes.
   Kafka is used as a warehouse where the actual data is pushed.
