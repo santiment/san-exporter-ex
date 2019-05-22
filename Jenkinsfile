@@ -9,6 +9,7 @@ podTemplate(label: 'san-exporter-ex-builder', containers: [
     ])
 ]) {
   node('san-exporter-ex-builder') {
+    def scmVars = checkout scm
     container('docker-compose') {
       stage('Test') {
           try {
