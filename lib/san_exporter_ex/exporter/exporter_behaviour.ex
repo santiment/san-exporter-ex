@@ -4,6 +4,7 @@ defmodule SanExporterEx.ExporterBehaviour do
 
   @type result :: :ok | {:error, String.t()}
 
+  @callback init(map | list) :: :ok
   @callback send_data(topic, data) :: result
   @callback send_data_async(topic, data) :: result
 end

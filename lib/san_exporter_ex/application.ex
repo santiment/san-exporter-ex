@@ -62,7 +62,6 @@ defmodule SanExporterEx.Application do
     # A task supervisor is needed to perform the async writes to kafka
     children = [
       {Task.Supervisor, [name: SanExporterEx.TaskSupervisor]},
-      %{id: :erlzk_app, start: {:erlzk_app, :start, [:normal, []]}, type: :supervisor},
       %{id: :brod_sup, start: {:brod_sup, :start_link, []}, type: :supervisor},
       %{id: :kafka_producer, start: {Kaffe, :start, [:normal, kaffe_opts]}, type: :supervisor}
     ]
