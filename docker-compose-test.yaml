@@ -22,9 +22,9 @@ services:
     extra_hosts:
      - "kafka:127.0.0.1"
 
-    depends_on:
-      - zookeeper
-      - kafka
+    # depends_on:
+    #   - zookeeper
+    #   - kafka
 
     # command: sh -c "mix test --trace"
     command: sh -c "bash"
