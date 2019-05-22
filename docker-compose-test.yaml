@@ -26,5 +26,4 @@ services:
     #   - zookeeper
     #   - kafka
 
-    # command: sh -c "mix test --trace"
-    command: sh -c "bash"
+    command: sh -c "mix test --trace"
