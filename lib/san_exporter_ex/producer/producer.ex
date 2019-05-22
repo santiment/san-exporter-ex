@@ -1,5 +1,5 @@
-defmodule SanExporterEx.Exporter do
-  @behaviour SanExporterEx.ExporterBehaviour
+defmodule SanExporterEx.Producer do
+  @behaviour SanExporterEx.ProducerBehaviour
 
   @impl true
   def init(_), do: :ok

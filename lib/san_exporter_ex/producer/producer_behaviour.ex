@@ -1,4 +1,4 @@
-defmodule SanExporterEx.ExporterBehaviour do
+defmodule SanExporterEx.ProducerBehaviour do
   @type topic :: String.t()
   @type data :: any()
 
