@@ -4,7 +4,7 @@ defmodule SanExporterEx.Application do
   use Application
 
   # the producern name cannot be different
-  @default_kafka_endpoint [localhost: 9092]
+  @default_kafka_endpoint [kafka: 9092]
   @default_kafka_producer_name :kaffe_producer_client
   @default_kafka_topic "api_call_data"
   @default_kafka_flush_timeout 20000
@@ -62,8 +62,8 @@ defmodule SanExporterEx.Application do
     # A task supervisor is needed to perform the async writes to kafka
     children = [
       {Task.Supervisor, [name: SanExporterEx.TaskSupervisor]},
-      %{id: :erlzk, start: {:erlzk_app, :start, [:normal, []]}, type: :supervisor},
-      %{id: :brod, start: {:brod_sup, :start_link, []}, type: :supervisor},
+      %{id: :erlzk_app, start: {:erlzk_app, :start, [:normal, []]}, type: :supervisor},
+      %{id: :brod_sup, start: {:brod_sup, :start_link, []}, type: :supervisor},
       %{id: :kafka_producer, start: {Kaffe, :start, [:normal, kaffe_opts]}, type: :supervisor}
     ]
 
