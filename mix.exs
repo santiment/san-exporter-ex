@@ -21,9 +21,7 @@ defmodule SanExporterEx.MixProject do
   defp deps do
     [
       {:kaffe, github: "IvanIvanoff/kaffe"},
-      {:erlzk, "~> 0.6.2"},
-      {:jason, "~> 1.1"},
-      {:distillery, "~> 2.0", runtime: false}
+      {:jason, "~> 1.1"}
     ]
   end
 
