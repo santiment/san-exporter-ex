@@ -1,4 +1,4 @@
-defmodule SanExrpoterEx.ApiCallRecorder do
+defmodule SanExporterEx.ApiCallRecorder do
   @moduledoc ~s"""
   Module for persisting API calls data to Kafka.
 
@@ -9,6 +9,8 @@ defmodule SanExrpoterEx.ApiCallRecorder do
 
   use GenServer
 
+  @exporter Application.get_env(:san_exporter_ex, :exporter_module, SanExporterEx.Exporter)
+
   @typedoc ~s"""
   A map that represents the API call data that will be persisted.
   """
@@ -16,10 +18,13 @@ defmodule SanExrpoterEx.ApiCallRecorder do
           timestamp: non_neg_integer(),
           user_id: non_neg_integer(),
           token: String.t(),
+          # FixedString(N) CH table and binary represented IP
           remote_ip: String.t(),
           san_tokens: float(),
           query: String.t(),
-          duration_ms: non_neg_integer()
+          duration_ms: non_neg_integer(),
+          user_agent: String.t(),
+          status_code: non_neg_integer()
         }
 
   @typedoc ~s"""
@@ -63,6 +68,8 @@ defmodule SanExrpoterEx.ApiCallRecorder do
   """
   @spec persist(api_call_data) :: :ok
   def persist(api_call_data) do
+    # Log so it's seen in Kibana
+    # Logger.info(api_call_data)
     GenServer.cast(__MODULE__, {:persist, api_call_data})
   end
 
@@ -99,6 +106,6 @@ defmodule SanExrpoterEx.ApiCallRecorder do
   end
 
   defp send_data(topic, data) do
-    SanExporterEx.Exporter.send_data(topic, data)
+    @exporter.send_data(topic, data)
   end
 end
