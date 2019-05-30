@@ -20,6 +20,7 @@ defmodule SanExporterEx.MixProject do
 
   defp deps do
     [
+      {:dialyxir, "~> 1.0.0-rc.6", only: [:dev], runtime: false},
       {:kaffe, github: "IvanIvanoff/kaffe"},
       {:jason, "~> 1.1"}
     ]
