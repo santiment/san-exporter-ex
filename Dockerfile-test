@@ -10,6 +10,7 @@ RUN mix local.rebar --force
 WORKDIR /app
 COPY . /app
 
+RUN mix format --check-formatted
 RUN mix deps.get
 RUN mix deps.compile
 
