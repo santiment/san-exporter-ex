@@ -10,9 +10,6 @@ defmodule SanExporterEx.Producer do
   @behaviour SanExporterEx.ProducerBehaviour
 
   @impl true
-  def init(_), do: :ok
-
-  @impl true
   def send_data(_, nil), do: :ok
   def send_data(_, []), do: :ok
   def send_data(topic, data), do: Kaffe.Producer.produce(topic, data)
