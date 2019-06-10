@@ -15,13 +15,14 @@ defmodule SanExporterEx.MixProject do
   def application do
     # override applications so `kaffe`, `brod` and `erlzk` ar not started.
     # Its lifetime will be controlled by the application
-    [extra_applications: [:logger], applications: []]
+    [extra_applications: [:logger], applications: [], included_applications: [:brod, :kaffe]]
   end
 
   defp deps do
     [
       {:dialyxir, "~> 1.0.0-rc.6", only: [:dev], runtime: false},
       {:kaffe, github: "IvanIvanoff/kaffe"},
+      {:distillery, "~> 2.0", runtime: false},
       {:jason, "~> 1.1"}
     ]
   end
