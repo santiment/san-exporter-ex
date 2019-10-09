@@ -20,6 +20,7 @@ slaveTemplates.dockerComposeTemplate { label ->
     container('docker-compose') {
       stage('Test') {
         try {
+          sh "ls -la"
           sh "./bin/test.sh"
         } finally {
           sh "docker-compose -f docker-compose-test.yaml down -v"
