@@ -13,9 +13,7 @@ defmodule SanExporterEx.MixProject do
   end
 
   def application do
-    # override applications so `kaffe`, `brod` and `erlzk` ar not started.
-    # Its lifetime will be controlled by the application
-    [extra_applications: [:logger], applications: [], included_applications: [:brod, :kaffe]]
+    [extra_applications: [:logger], applications: [], included_applications: []]
   end
 
   defp deps do
