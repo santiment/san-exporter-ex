@@ -1,6 +1,11 @@
 # SanExporterEx
 
-**TODO: Add description**
+`SanExporterEx.Producer.Supervisor` accepts an option `:start_brod_supervisor`
+which is `true` by default. If `false` is provided, `:brod_sup` won't be started.
+This is to be used when other parts of the application that this SanExporterEx is
+used in can decide when and how to start the brod supervisor. One notable case is
+dev/test environments when the producer is replaced by an in-memory one but the other
+parts of the application still need the brod supervisor.
 
 ## Installation
 

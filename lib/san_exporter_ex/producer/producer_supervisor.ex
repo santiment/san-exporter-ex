@@ -9,8 +9,9 @@ defmodule SanExporterEx.Producer.Supervisor do
 
   @impl Supervisor
   def init(opts) do
+    start_brod_supervisor = Keyword.get(opts, :start_brod_supervisor, true)
     name = Keyword.get(opts, :name, __MODULE__)
-    brod_sup_id = "brod_sup_#{name}"
+
     kaffe_producer_id = "kaffe_producer_#{name}"
 
     kaffe_opts = [
@@ -20,9 +21,17 @@ defmodule SanExporterEx.Producer.Supervisor do
     ]
 
     children = [
-      %{id: brod_sup_id, start: {:brod_sup, :start_link, []}, type: :supervisor},
       %{id: kaffe_producer_id, start: {Kaffe, :start, [:normal, kaffe_opts]}, type: :supervisor}
     ]
+
+    children =
+      case start_brod_supervisor do
+        true ->
+          [%{id: :"brod_sup_#{name}", start: {:brod_sup, :start_link, []}, type: :supervisor}] ++ children
+
+        false ->
+          children
+      end
 
     Supervisor.init(children, strategy: :one_for_all)
   end
