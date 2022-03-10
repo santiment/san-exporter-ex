@@ -1,25 +1,31 @@
-podTemplate(label: 'san-exporter-ex-builder', containers: [
-  containerTemplate(
-    name: 'docker-compose',
-    image: 'docker/compose:1.22.0',
-    ttyEnabled: true,
-    command: 'cat',
-    envVars: [
-      envVar(key: 'DOCKER_HOST', value: 'tcp://docker-host-docker-host:2375')
-    ])
-]) {
-  node('san-exporter-ex-builder') {
-    def scmVars = checkout scm
+@Library('podTemplateLib')
+
+import net.santiment.utils.podTemplates
+
+properties([
+  buildDiscarder(
+    logRotator(
+      artifactDaysToKeepStr: '30', 
+      artifactNumToKeepStr: '', 
+      daysToKeepStr: '30', 
+      numToKeepStr: ''
+    )
+  )
+])
+
+slaveTemplates = new podTemplates()
+
+slaveTemplates.dockerComposeTemplate { label ->
+  node(label) {
     container('docker-compose') {
       stage('Test') {
-          try {
-            sh "docker-compose -f docker-compose-test.yaml build test"
-            sh "docker-compose -f docker-compose-test.yaml run test"
-          } finally {
-            sh "docker-compose -f docker-compose-test.yaml down -v"
-          }
+        try {
+          sh "ls -la"
+          sh "./bin/test.sh"
+        } finally {
+          sh "docker-compose -f docker-compose-test.yaml down -v"
+        }
       }
     }
   }
 }
-
